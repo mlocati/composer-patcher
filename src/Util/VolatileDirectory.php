@@ -4,6 +4,7 @@ namespace ComposerPatcher\Util;
 
 use Composer\Util\Filesystem;
 use ComposerPatcher\Exception;
+use Exception as GenericException;
 
 /**
  * A helper class that creates a temporary directory, and deletes it when the class is no more in use.
@@ -56,7 +57,13 @@ class VolatileDirectory
     public function __destruct()
     {
         if ($this->path !== null) {
-            $this->filesystem->removeDirectory($this->path);
+            set_error_handler(function ($code, $msg) {
+            });
+            try {
+                @$this->filesystem->removeDirectory($this->path);
+            } catch (GenericException $x) {
+            }
+            restore_error_handler();
             $this->path = null;
         }
     }
