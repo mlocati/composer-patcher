@@ -24,7 +24,7 @@ matrix:
     -
       php: 7.2
       env:
-        - DO_CHECK_CODESTYLE=1
+        - DO_CODESTYLE=1
 
 before_install:
   - phpenv config-rm xdebug.ini || true
