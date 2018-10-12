@@ -1,0 +1,41 @@
+language: php
+
+php:
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7
+  - 7.1
+  - nightly
+
+env:
+  global:
+    - DO_CODESTYLE=0
+    - DO_TEST=1
+
+matrix:
+  allow_failures:
+    -
+      php: nightly
+  include:
+    -
+      dist: precise
+      php: 5.3
+    -
+      php: 7.2
+      env:
+        - DO_CHECK_CODESTYLE=1
+
+before_install:
+  - phpenv config-rm xdebug.ini || true
+
+install:
+  - travis-retry composer --no-interaction install
+
+script:
+  - if test $DO_CODESTYLE -ne 0; then composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .; fi
+  - if test $DO_TEST -ne 0; then composer --no-interaction test; fi
+
+cache:
+  directories:
+    - $HOME/.composer/cache

@@ -1,0 +1,118 @@
+<?php
+
+namespace ComposerPatcher;
+
+use Composer\EventDispatcher\EventDispatcher;
+use Composer\Installer\InstallationManager;
+use Composer\IO\IOInterface;
+use Composer\Package\PackageInterface;
+use Composer\Util\ProcessExecutor;
+use ComposerPatcher\Event\Patch as PatchEvent;
+use ComposerPatcher\PatchExecutor\GitPatcher;
+use ComposerPatcher\PatchExecutor\PatchPatcher;
+use ComposerPatcher\Util\VolatileDirectory;
+
+class Patcher
+{
+    /**
+     * @var \Composer\IO\IOInterface
+     */
+    private $io;
+
+    /**
+     * The InstallationManager instance to be used to resolve package installation paths.
+     *
+     * @var \Composer\Installer\InstallationManager
+     */
+    private $installationManager;
+
+    /**
+     * @var \Composer\EventDispatcher\EventDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var \Composer\Util\ProcessExecutor
+     */
+    private $processExecutor;
+
+    /**
+     * @var \ComposerPatcher\PatchExecutor\GitPatcher|null
+     */
+    private $gitPatcher;
+
+    /**
+     * @var \ComposerPatcher\PatchExecutor\PatchPatcher|null
+     */
+    private $patchPatcher;
+
+    /**
+     * @var \ComposerPatcher\Util\VolatileDirectory
+     */
+    private $volatileDirectory;
+
+    /**
+     * @param \Composer\IO\IOInterface $io
+     * @param \Composer\Installer\InstallationManager $installationManager
+     * @param \Composer\EventDispatcher\EventDispatcher $eventDispatcher
+     * @param \Composer\Util\ProcessExecutor $processExecutor
+     * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory
+     */
+    public function __construct(IOInterface $io, InstallationManager $installationManager, EventDispatcher $eventDispatcher, ProcessExecutor $processExecutor, VolatileDirectory $volatileDirectory)
+    {
+        $this->io = $io;
+        $this->installationManager = $installationManager;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->processExecutor = $processExecutor;
+        $this->volatileDirectory = $volatileDirectory;
+    }
+
+    /**
+     * Apply a patch to a package.
+     *
+     * @param \ComposerPatcher\Patch $patch
+     * @param \Composer\Package\PackageInterface $package
+     *
+     * @throws \Exception in case of errors
+     */
+    public function applyPatch(Patch $patch, PackageInterface $package)
+    {
+        $this->io->write('<info>Applying patch '.$patch->getFromPackage()->getName().'/'.$patch->getDescription().' to '.$package->getName().'.</info>');
+        $baseDirectory = $this->installationManager->getInstallPath($package);
+        $this->eventDispatcher->dispatch(null, new PatchEvent(PatchEvent::EVENTNAME_PRE_APPLY_PATCH, $patch));
+        if (GitPatcher::shouldBeUsetToApplyPatchesTo($baseDirectory)) {
+            $this->getGitPatcher()->applyPatch($patch, $baseDirectory);
+        } else {
+            $this->getPatchPatcher()->applyPatch($patch, $baseDirectory);
+        }
+        $this->eventDispatcher->dispatch(null, new PatchEvent(PatchEvent::EVENTNAME_POST_APPLY_PATCH, $patch));
+    }
+
+    /**
+     * @throws \ComposerPatcher\Exception\CommandNotFound when the git command is not available
+     *
+     * @return \ComposerPatcher\PatchExecutor\GitPatcher
+     */
+    protected function getGitPatcher()
+    {
+        if ($this->gitPatcher === null) {
+            $this->gitPatcher = new GitPatcher($this->processExecutor, $this->io);
+        }
+
+        return $this->gitPatcher;
+    }
+
+    /**
+     * @throws \ComposerPatcher\Exception\CommandNotFound when the git command is not available
+     *
+     * @return \ComposerPatcher\PatchExecutor\PatchPatcher
+     */
+    protected function getPatchPatcher()
+    {
+        if ($this->patchPatcher === null) {
+            $this->patchPatcher = new PatchPatcher($this->processExecutor, $this->io, $this->volatileDirectory);
+        }
+
+        return $this->patchPatcher;
+    }
+}

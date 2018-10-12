@@ -1,0 +1,52 @@
+{
+    "type": "composer-plugin",
+    "license": "MIT",
+    "version": "1.0.0",
+    "name": "mlocati/composer-patcher",
+    "description": "A Composer plugin to patch Composer packages.",
+    "homepage": "https://github.com/mlocati/composer-patcher",
+    "keywords": [
+        "composer",
+        "plugin",
+        "patch",
+        "patches",
+        "patcher"
+    ],
+    "authors": [
+        {
+            "name": "Michele Locati",
+            "email": "michele@locati.it",
+            "role": "author",
+            "homepage": "https://mlocati.github.io"
+        }
+    ],
+    "require": {
+        "php": "^5.3.2 || ^7.0",
+        "composer-plugin-api": "^1.1.0"
+    },
+    "require-dev": {
+        "composer/composer": "^1.1.0",
+        "friendsofphp/php-cs-fixer": "^2.2.0",
+        "symfony/phpunit-bridge": "^3.2 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "ComposerPatcher\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ComposerPatcher\\Test\\": "test"
+        }
+    },
+    "extra": {
+        "class": "ComposerPatcher\\Plugin"
+    },
+    "conflict": {
+        "cweagans/composer-patches": "*"
+    },
+    "scripts": {
+        "codestyle": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist",
+        "test": "simple-phpunit --verbose"
+    }
+}
