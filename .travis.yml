@@ -30,6 +30,7 @@ before_install:
   - phpenv config-rm xdebug.ini || true
 
 install:
+  - if test $DO_CODESTYLE -eq 0; then composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer; fi
   - travis_retry composer --no-interaction install
 
 script:
