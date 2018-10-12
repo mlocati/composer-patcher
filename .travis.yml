@@ -30,7 +30,7 @@ before_install:
   - phpenv config-rm xdebug.ini || true
 
 install:
-  - travis-retry composer --no-interaction install
+  - travis_retry composer --no-interaction install
 
 script:
   - if test $DO_CODESTYLE -ne 0; then composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .; fi
