@@ -71,15 +71,15 @@ class GitPatcher extends PatchExecutor
         $chunks = array(
             'git',
             // Run git as if it was started in $baseDirectory
-            '-C ', $this->processExecutor->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
+            '-C ', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
             'apply',
-            $this->processExecutor->escape($patchLevel),
+            $this->escape($patchLevel),
         );
         if ($justTesting) {
             $chunks[] = '--check';
             $chunks[] = '-v';
         }
-        $chunks[] = $this->processExecutor->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile));
+        $chunks[] = $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile));
 
         return implode(' ', $chunks);
     }

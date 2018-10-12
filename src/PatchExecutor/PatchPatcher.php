@@ -102,7 +102,7 @@ class PatchPatcher extends PatchExecutor
         try {
             $this->checkCommandExists('patch');
             $this->command = 'patch';
-            
+
             return;
         } catch (Exception\CommandNotFound $x) {
         }
@@ -149,17 +149,17 @@ EOT
     {
         $chunks = array(
             $this->command,
-            $this->processExecutor->escape($patchLevel),
+            $this->escape($patchLevel),
             // Back up mismatches only if otherwise requested
             '--no-backup-if-mismatch',
             // Ignore patches where the differences have already been applied to the file (aka --forward)
             '-N',
             // Change the working directory (aka --directory)
-            '-d', $this->processExecutor->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
+            '-d', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
             // Read patch from PATCHFILE instead of stdin (aka --input)
-            '-i', $this->processExecutor->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile)),
+            '-i', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile)),
             // Output rejects to FILE (aka --reject-file)
-            '-r', $this->processExecutor->escape(str_replace('/', DIRECTORY_SEPARATOR, $this->volatileDirectory->getNewPath('.rej'))),
+            '-r', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $this->volatileDirectory->getNewPath('.rej'))),
         );
 
         return implode(' ', $chunks);
