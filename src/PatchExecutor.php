@@ -38,6 +38,9 @@ abstract class PatchExecutor
      * @param \ComposerPatcher\Patch $patch the patch to be applied
      * @param string $baseDirectory the directory where the patch should be applied
      *
+     * @throws \ComposerPatcher\Exception\PatchAlreadyApplied if the patch is already applied
+     * @throws \ComposerPatcher\Exception\PatchNotApplied if the patch could not be applied
+     *
      * @return bool
      */
     public function applyPatch(Patch $patch, $baseDirectory)
@@ -48,6 +51,8 @@ abstract class PatchExecutor
                 $this->applyPatchLevel($patch, $baseDirectory, $patchLevel);
 
                 return;
+            } catch (Exception\PatchAlreadyApplied $x) {
+                throw $x;
             } catch (Exception\PatchNotApplied $x) {
                 if ($error === null) {
                     $error = $x;
@@ -64,6 +69,7 @@ abstract class PatchExecutor
      * @param string $baseDirectory the directory where the patch should be applied
      * @param string $patchLevel the patch level
      *
+     * @throws \ComposerPatcher\Exception\PatchAlreadyApplied if the patch is already applied
      * @throws \ComposerPatcher\Exception\PatchNotApplied when the command failed
      */
     abstract protected function applyPatchLevel(Patch $patch, $baseDirectory, $patchLevel);

@@ -7,21 +7,29 @@ use Composer\Util\ProcessExecutor;
 use ComposerPatcher\Exception;
 use ComposerPatcher\Patch;
 use ComposerPatcher\PatchExecutor;
+use ComposerPatcher\Util\VolatileDirectory;
 
 class GitPatcher extends PatchExecutor
 {
+    /**
+     * @var \ComposerPatcher\PatchExecutor\PatchPatcher
+     */
+    private $patchPatcher;
+
     /**
      * Initialize the instance.
      *
      * @param \Composer\Util\ProcessExecutor $processExecutor the ProcessExecutor instance to be used to actually run commands
      * @param \Composer\IO\IOInterface $io the IOInterface instance to be used for user feedback
+     * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory the VolatileDirectory instance to use to store temporary files
      *
      * @throws \ComposerPatcher\Exception\CommandNotFound when the git command is not available
      */
-    public function __construct(ProcessExecutor $processExecutor, IOInterface $io)
+    public function __construct(ProcessExecutor $processExecutor, IOInterface $io, VolatileDirectory $volatileDirectory)
     {
         parent::__construct($processExecutor, $io);
         $this->checkCommandExists('git');
+        $this->patchPatcher = new PatchPatcher($processExecutor, $io, $volatileDirectory);
     }
 
     /**
@@ -43,6 +51,9 @@ class GitPatcher extends PatchExecutor
      */
     protected function applyPatchLevel(Patch $patch, $baseDirectory, $patchLevel)
     {
+        if ($this->patchPatcher->patchIsAlreadyApplied($patch, $baseDirectory, $patchLevel)) {
+            throw new Exception\PatchAlreadyApplied($patch);
+        }
         foreach (array(true, false) as $justTesting) {
             $command = $this->buildCommand($patch->getLocalPath(), $baseDirectory, $patchLevel, $justTesting);
             if ($justTesting && $this->io->isVerbose()) {

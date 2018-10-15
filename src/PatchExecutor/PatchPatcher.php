@@ -30,8 +30,7 @@ class PatchPatcher extends PatchExecutor
      *
      * @param \Composer\Util\ProcessExecutor $processExecutor the ProcessExecutor instance to be used to actually run commands
      * @param \Composer\IO\IOInterface $io the IOInterface instance to be used for user feedback
-     * @param \ComposerPatcher\Util\VolatileDirectory the VolatileDirectory instance to use to store temporary files
-     * @param VolatileDirectory $volatileDirectory
+     * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory the VolatileDirectory instance to use to store temporary files
      *
      * @throws \ComposerPatcher\Exception\CommandNotFound when the patch command is not available
      */
@@ -47,22 +46,45 @@ class PatchPatcher extends PatchExecutor
     }
 
     /**
+     * Check if a patch is already applied.
+     *
+     * @param \ComposerPatcher\Patch $patch the patch to be analyzed
+     * @param string $baseDirectory the directory where the patch should be applied
+     * @param string $patchLevel the patch level
+     *
+     * @return bool
+     */
+    public function patchIsAlreadyApplied(Patch $patch, $baseDirectory, $patchLevel)
+    {
+        $command = $this->buildCommand($patch->getLocalPath(), $baseDirectory, $patchLevel, true);
+        list($rc, $stdOut, $stdErr) = $this->run($command);
+        if ($stdErr === '') {
+            $stdErr = $stdOut;
+        }
+        if ($rc === 1 && strpos($stdErr, 'Skipping patch.') !== false && preg_match('/^(\\d+) out of \\1 hunks? ignored/m', $stdErr)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @see \ComposerPatcher\PatchExecutor::applyPatchLevel()
      */
     protected function applyPatchLevel(Patch $patch, $baseDirectory, $patchLevel)
     {
-        $command = $this->buildCommand($patch->getLocalPath(), $baseDirectory, $patchLevel);
+        if ($this->patchIsAlreadyApplied($patch, $baseDirectory, $patchLevel)) {
+            throw new Exception\PatchAlreadyApplied($patch);
+        }
+        $command = $this->buildCommand($patch->getLocalPath(), $baseDirectory, $patchLevel, false);
         list($rc, $stdOut, $stdErr) = $this->run($command);
         if ($rc === 0) {
             return;
         }
         if ($stdErr === '') {
             $stdErr = $stdOut;
-        }
-        if ($rc === 1 && strpos($stdErr, 'Skipping patch.') !== false && preg_match('/^(\\d+) out of \\1 hunks? ignored/m', $stdErr)) {
-            return;
         }
         throw new Exception\PatchNotApplied($patch, "failed to apply the patch with the patch command: {$stdErr}");
     }
@@ -142,10 +164,11 @@ EOT
      * @param string $localPatchFile
      * @param string $baseDirectory
      * @param string $patchLevel
+     * @param bool $dryRun
      *
      * @return string
      */
-    private function buildCommand($localPatchFile, $baseDirectory, $patchLevel)
+    private function buildCommand($localPatchFile, $baseDirectory, $patchLevel, $dryRun)
     {
         $chunks = array(
             $this->command,
@@ -161,6 +184,10 @@ EOT
             // Output rejects to FILE (aka --reject-file)
             '-r', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $this->volatileDirectory->getNewPath('.rej'))),
         );
+        if ($dryRun) {
+            // Do not actually change any files; just print what would happen.
+            $chunks[] = '--dry-run';
+        }
 
         return implode(' ', $chunks);
     }

@@ -317,14 +317,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
                 $this->io->write('<info>No patches found for '.$package->getName().'.</info>');
             }
         } else {
-            $extra = $package->getExtra();
-            $appliedPatchesHash = isset($extra['patches_applied']['hash']) ? $extra['patches_applied']['hash'] : '';
-            $patchesHash = $patches->getHash();
-            if ($patchesHash === $appliedPatchesHash) {
-                $this->io->write('<info>'.$package->getName().' is already patched.</info>');
-            } else {
-                $result = true;
-            }
+            $result = true;
         }
 
         return $result;

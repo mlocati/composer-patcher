@@ -77,13 +77,18 @@ class Patcher
      */
     public function applyPatch(Patch $patch, PackageInterface $package)
     {
-        $this->io->write('<info>Applying patch '.$patch->getFromPackage()->getName().'/'.$patch->getDescription().' to '.$package->getName().'.</info>');
+        $this->io->write('<info>Applying patch '.$patch->getFromPackage()->getName().'/'.$patch->getDescription().' to '.$package->getName().'... </info>', false);
         $baseDirectory = $this->installationManager->getInstallPath($package);
         $this->eventDispatcher->dispatch(null, new PatchEvent(PatchEvent::EVENTNAME_PRE_APPLY_PATCH, $patch));
-        if (GitPatcher::shouldBeUsetToApplyPatchesTo($baseDirectory)) {
-            $this->getGitPatcher()->applyPatch($patch, $baseDirectory);
-        } else {
-            $this->getPatchPatcher()->applyPatch($patch, $baseDirectory);
+        try {
+            if (GitPatcher::shouldBeUsetToApplyPatchesTo($baseDirectory)) {
+                $this->getGitPatcher()->applyPatch($patch, $baseDirectory);
+            } else {
+                $this->getPatchPatcher()->applyPatch($patch, $baseDirectory);
+            }
+            $this->io->write('<info>done.</info>');
+        } catch (Exception\PatchAlreadyApplied $x) {
+            $this->io->write('<info>patch was already applied.</info>');
         }
         $this->eventDispatcher->dispatch(null, new PatchEvent(PatchEvent::EVENTNAME_POST_APPLY_PATCH, $patch));
     }
@@ -96,7 +101,7 @@ class Patcher
     protected function getGitPatcher()
     {
         if ($this->gitPatcher === null) {
-            $this->gitPatcher = new GitPatcher($this->processExecutor, $this->io);
+            $this->gitPatcher = new GitPatcher($this->processExecutor, $this->io, $this->volatileDirectory);
         }
 
         return $this->gitPatcher;
