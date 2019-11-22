@@ -1,42 +1,112 @@
 language: php
-
-php:
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7
-  - 7.1
-  - nightly
-
-env:
-  global:
-    - DO_CODESTYLE=0
-    - DO_TEST=1
-
-matrix:
-  allow_failures:
-    -
-      php: nightly
-  include:
-    -
-      dist: precise
-      php: 5.3
-    -
-      php: 7.2
-      env:
-        - DO_CODESTYLE=1
-
-before_install:
-  - phpenv config-rm xdebug.ini || true
-
-install:
-  - if test $DO_CODESTYLE -eq 0; then composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer; fi
-  - travis_retry composer --no-interaction install
-
-script:
-  - if test $DO_CODESTYLE -ne 0; then composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .; fi
-  - if test $DO_TEST -ne 0; then composer --no-interaction test; fi
-
+sudo: false
+branches:
+  only:
+    - master
 cache:
   directories:
     - $HOME/.composer/cache
+notifications:
+  email: false
+env:
+  - COMPOSER_DISABLE_XDEBUG_WARN=1
+before_install:
+  - phpenv config-rm xdebug.ini || true
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - name: Test with PHP 7.4
+    - name: Test with PHP Nightly
+  include:
+    - name: Check coding style
+      dist: precise
+      php: "7.2"
+      install:
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .
+
+    - name: Test with PHP 5.3
+      dist: precise
+      php: "5.3"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 5.4
+      dist: trusty
+      php: "5.4"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 5.5
+      dist: trusty
+      php: "5.5"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 5.6
+      php: "5.6"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 7.0
+      php: "7.0"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 7.1
+      php: "7.1"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 7.2
+      php: "7.2"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 7.3
+      php: "7.3"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP 7.4
+      php: "7.4snapshot"
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test
+
+    - name: Test with PHP Nightly
+      php: nightly
+      install:
+        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
+        - composer --no-interaction config platform.php 7.4.0
+        - travis_retry composer --no-interaction install
+      script:
+        - composer --no-interaction test

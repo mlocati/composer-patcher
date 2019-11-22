@@ -15,19 +15,19 @@ class PathResolverTest extends TestCase
      */
     private static $pathResolver;
 
-    public static function setUpBeforeClass()
+    public static function mySetUpBeforeClass()
     {
-        parent::setUpBeforeClass();
+        parent::mySetUpBeforeClass();
         self::$pathResolver = new PathResolver(
             new VolatileDirectory(COMPOSER_PATCHER_TEST_TMP),
             new RemoteFilesystem(new NullIO())
         );
     }
 
-    public static function tearDownAfterClass()
+    public static function myTearDownAfterClass()
     {
         self::$pathResolver = null;
-        parent::tearDownAfterClass();
+        parent::myTearDownAfterClass();
     }
 
     public function resolvePathProvider()
