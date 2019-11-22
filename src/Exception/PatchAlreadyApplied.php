@@ -25,10 +25,10 @@ class PatchAlreadyApplied extends Exception
     {
         $this->patch = $patch;
         $message = (string) $message;
-        if ('' === $message) {
+        if ($message === '') {
             $packageVersion = $patch->getForPackageVersion();
             $message = 'The patch "'.$patch->getDescription().'"';
-            if (null !== $packageVersion) {
+            if ($packageVersion !== null) {
                 $message .= ' for '.$packageVersion->getPrettyString();
             }
             $message .= ' provided by '.$patch->getFromPackage()->__toString().' is already applied.';
