@@ -19,12 +19,12 @@ class VolatileDirectoryTest extends TestCase
 
     /**
      * @dataProvider invalidParentDirectoryProvider
-     * @expectedException \ComposerPatcher\Exception\PathNotFound
      *
      * @param string $parentDirectory
      */
     public function testInvalidParentDirectory($parentDirectory)
     {
+        $this->myExpectException('ComposerPatcher\Exception\PathNotFound');
         $vd = new VolatileDirectory($parentDirectory);
         $vd->getNewPath();
     }

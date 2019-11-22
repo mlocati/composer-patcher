@@ -27,7 +27,7 @@
     "require-dev": {
         "composer/composer": "^1.1.0",
         "friendsofphp/php-cs-fixer": "2.2.*",
-        "symfony/phpunit-bridge": "^3.2 || ^4.0"
+        "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
     },
     "autoload": {
         "psr-4": {
@@ -47,6 +47,6 @@
     },
     "scripts": {
         "codestyle": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist",
-        "test": "simple-phpunit --verbose"
+        "test": "phpunit --verbose"
     }
 }
