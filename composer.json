@@ -1,7 +1,6 @@
 {
     "type": "composer-plugin",
     "license": "MIT",
-    "version": "1.0.0",
     "name": "mlocati/composer-patcher",
     "description": "A Composer plugin to patch Composer packages.",
     "homepage": "https://github.com/mlocati/composer-patcher",
