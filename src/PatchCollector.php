@@ -143,7 +143,12 @@ class PatchCollector
         if (!is_array($patches)) {
             $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches', $patches, 'The extra.patches configuration must be an array.'));
         } else {
-            $packageDirectory = $this->installationManager->getInstallPath($package);
+            // If the package is the RootPackage, we won't be able to get its install path from the installationmanager
+            if ($package instanceof RootPackageInterface) {
+                $packageDirectory = getcwd();
+            } else {
+                $packageDirectory = $this->installationManager->getInstallPath($package);
+            }
             foreach ($patches as $forPackageHandle => $patchList) {
                 if (!is_array($patchList)) {
                     $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches', $package, "The \"{$forPackageHandle}\" value must be an array."));
