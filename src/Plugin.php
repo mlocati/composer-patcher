@@ -66,9 +66,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Activate the composer plugin.
-     *
-     * @param \Composer\Composer $composer
-     * @param \Composer\IO\IOInterface $io
      */
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -91,8 +88,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Before running composer install/update, let's uninstall some packages.
-     *
-     * @param \Composer\Script\Event $event
      */
     public function preOperation(Event $event)
     {
@@ -110,8 +105,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * After running composer install/update, let's patch some packages.
-     *
-     * @param \Composer\Script\Event $event
      *
      * @throws \Exception
      */
@@ -142,18 +135,18 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         if (isset($extra['patch-temporary-folder'])) {
             $ptf = $extra['patch-temporary-folder'];
             if ($ptf !== null && $ptf !== '') {
-                if (!is_string($ptf)) {
+                if (!\is_string($ptf)) {
                     $this->io->write("<error>The value of extra.patch-temporary-folder must be a string: we'll use the system temporary folder.</error>");
                 } else {
-                    $ptf = str_replace(DIRECTORY_SEPARATOR, '/', $ptf);
+                    $ptf = str_replace(\DIRECTORY_SEPARATOR, '/', $ptf);
                     if ($ptf !== '/') {
                         $ptf = rtrim($ptf, '/');
                     }
                     if (!is_dir($ptf)) {
-                        $ptf = str_replace('/', DIRECTORY_SEPARATOR, $ptf);
+                        $ptf = str_replace('/', \DIRECTORY_SEPARATOR, $ptf);
                         $this->io->write("<error>The value of extra.patch-temporary-folder '{$ptf}' does not exist: we\'ll use the system temporary folder.</error>");
                     } elseif (!is_writable($ptf)) {
-                        $ptf = str_replace('/', DIRECTORY_SEPARATOR, $ptf);
+                        $ptf = str_replace('/', \DIRECTORY_SEPARATOR, $ptf);
                         $this->io->write("<error>The value of extra.patch-temporary-folder '{$ptf}' is not writable: we\'ll use the system temporary folder.</error>");
                     } else {
                         $result = $ptf;
@@ -362,9 +355,6 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Persist the patches_applied to the package extra section.
-     *
-     * @param \Composer\Package\PackageInterface $package
-     * @param array $patchesAppliedData
      */
     protected function setPatchedPackageData(PackageInterface $package, array $patchesAppliedData)
     {

@@ -30,14 +30,14 @@ abstract class TestCaseBase extends PHPUnitTestCase
             return;
         }
         $this->expectException($exception);
-        if (func_num_args() >= 2) {
+        if (\func_num_args() >= 2) {
             if ($message !== null) {
-                if (!is_string($message)) {
+                if (!\is_string($message)) {
                     throw new Exception('Invalid $exception argument in '.__FUNCTION__);
                 }
                 $this->expectExceptionMessage($message);
             }
-            if (func_num_args() >= 3) {
+            if (\func_num_args() >= 3) {
                 if ($code !== null) {
                     $this->expectExceptionCode(null);
                 }

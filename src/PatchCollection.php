@@ -57,7 +57,7 @@ class PatchCollection
      *
      * @return $this
      */
-    public function merge(PatchCollection $otherCollection)
+    public function merge(self $otherCollection)
     {
         $this->patches = array_merge($this->patches, $otherCollection->getPatches());
 

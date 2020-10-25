@@ -51,13 +51,6 @@ class Patcher
      */
     private $volatileDirectory;
 
-    /**
-     * @param \Composer\IO\IOInterface $io
-     * @param \Composer\Installer\InstallationManager $installationManager
-     * @param \Composer\EventDispatcher\EventDispatcher $eventDispatcher
-     * @param \Composer\Util\ProcessExecutor $processExecutor
-     * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory
-     */
     public function __construct(IOInterface $io, InstallationManager $installationManager, EventDispatcher $eventDispatcher, ProcessExecutor $processExecutor, VolatileDirectory $volatileDirectory)
     {
         $this->io = $io;
@@ -71,7 +64,6 @@ class Patcher
      * Apply a patch to a package.
      *
      * @param \ComposerPatcher\Patch $patch
-     * @param \Composer\Package\PackageInterface $package
      *
      * @throws \Exception in case of errors
      */
@@ -100,7 +92,7 @@ class Patcher
      */
     protected function getGitPatcher()
     {
-        if ($this->gitPatcher === null) {
+        if (null === $this->gitPatcher) {
             $this->gitPatcher = new GitPatcher($this->processExecutor, $this->io, $this->volatileDirectory);
         }
 
@@ -114,7 +106,7 @@ class Patcher
      */
     protected function getPatchPatcher()
     {
-        if ($this->patchPatcher === null) {
+        if (null === $this->patchPatcher) {
             $this->patchPatcher = new PatchPatcher($this->processExecutor, $this->io, $this->volatileDirectory);
         }
 

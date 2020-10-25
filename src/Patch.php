@@ -165,8 +165,6 @@ class Patch
     /**
      * Check if this patch is for a package.
      *
-     * @param \Composer\Package\PackageInterface $package
-     *
      * @return bool
      */
     public function isForPackage(PackageInterface $package)

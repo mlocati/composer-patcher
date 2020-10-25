@@ -60,10 +60,10 @@ class GitPatcher extends PatchExecutor
                 $this->io->write("<comment>Testing ability to patch with \"git apply\" using patch level {$patchLevel} with the following command:\n{$command}</comment>");
             }
             list($rc, , $stdErr) = $this->run($command);
-            if ($rc !== 0) {
+            if (0 !== $rc) {
                 throw new Exception\PatchNotApplied($patch, "failed to apply the patch with GIT: {$stdErr}");
             }
-            if (strpos($stdErr, 'Skipped') === 0) {
+            if (0 === strpos($stdErr, 'Skipped')) {
                 return;
             }
         }
@@ -82,7 +82,7 @@ class GitPatcher extends PatchExecutor
         $chunks = array(
             'git',
             // Run git as if it was started in $baseDirectory
-            '-C ', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
+            '-C ', $this->escape(str_replace('/', \DIRECTORY_SEPARATOR, $baseDirectory)),
             'apply',
             $this->escape($patchLevel),
         );
@@ -90,7 +90,7 @@ class GitPatcher extends PatchExecutor
             $chunks[] = '--check';
             $chunks[] = '-v';
         }
-        $chunks[] = $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile));
+        $chunks[] = $this->escape(str_replace('/', \DIRECTORY_SEPARATOR, $localPatchFile));
 
         return implode(' ', $chunks);
     }

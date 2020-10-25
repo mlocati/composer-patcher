@@ -39,7 +39,6 @@ class InvalidPackageConfigurationValue extends Exception
     protected $invalidValueDescription;
 
     /**
-     * @param \Composer\Package\PackageInterface $package
      * @param string $configurationName the name of the invalid configuration value
      * @param mixed $configurationValue the value of the invalid configuration
      * @param string $invalidValueDescription the reason why the message value is not valid

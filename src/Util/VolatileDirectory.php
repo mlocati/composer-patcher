@@ -43,7 +43,7 @@ class VolatileDirectory
      */
     public function __construct($parentDirectory = '', Filesystem $filesystem = null)
     {
-        $parentDirectory = str_replace(DIRECTORY_SEPARATOR, '/', (string) $parentDirectory);
+        $parentDirectory = str_replace(\DIRECTORY_SEPARATOR, '/', (string) $parentDirectory);
         if ($parentDirectory !== '/') {
             $parentDirectory = rtrim($parentDirectory, '/');
         }
@@ -78,8 +78,8 @@ class VolatileDirectory
     public static function getSystemTemporaryDirectory()
     {
         $tempDir = @sys_get_temp_dir();
-        if (is_string($tempDir)) {
-            $tempDir = str_replace(DIRECTORY_SEPARATOR, '/', (string) $tempDir);
+        if (\is_string($tempDir)) {
+            $tempDir = str_replace(\DIRECTORY_SEPARATOR, '/', (string) $tempDir);
             if ($tempDir !== '/') {
                 $tempDir = rtrim($tempDir, '/');
             }
@@ -140,7 +140,7 @@ class VolatileDirectory
             if (!is_writable($parentDirectory)) {
                 throw new Exception\PathNotWritable($parentDirectory);
             }
-            for (; ;) {
+            for (;;) {
                 $tempNam = @tempnam($parentDirectory, 'PCH');
                 if ($tempNam === false) {
                     throw new Exception\PathNotCreated("{$parentDirectory}/<TEMPORARY>");
@@ -150,7 +150,7 @@ class VolatileDirectory
                     break;
                 }
             }
-            $this->path = rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $tempNam), '/');
+            $this->path = rtrim(str_replace(\DIRECTORY_SEPARATOR, '/', $tempNam), '/');
         }
 
         return $this->path;

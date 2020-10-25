@@ -21,7 +21,6 @@ class Patch extends Event
      * Initialize the instance.
      *
      * @param string $name the event name
-     * @param \ComposerPatcher\Patch $patch
      */
     public function __construct($name, PatchObject $patch)
     {

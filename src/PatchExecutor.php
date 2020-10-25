@@ -54,7 +54,7 @@ abstract class PatchExecutor
             } catch (Exception\PatchAlreadyApplied $x) {
                 throw $x;
             } catch (Exception\PatchNotApplied $x) {
-                if ($error === null) {
+                if (null === $error) {
                     $error = $x;
                 }
             }
@@ -78,7 +78,7 @@ abstract class PatchExecutor
      * Run a command and return the exit code.
      *
      * @param string $command The command to be executed
-     * @param null|mixed $standardInput
+     * @param mixed|null $standardInput
      *
      * @return array First element is the command return code, second element is the standard output, thirg element is the standard error
      */
@@ -106,11 +106,11 @@ abstract class PatchExecutor
     {
         $command = $commandName;
         $argument = (string) $argument;
-        if ($argument !== '') {
+        if ('' !== $argument) {
             $command .= ' '.$argument;
         }
         list($rc, , $stdErr) = $this->run($command);
-        if ($rc !== 0) {
+        if (0 !== $rc) {
             throw new Exception\CommandNotFound($commandName, $stdErr ? $stdErr : null);
         }
     }
@@ -138,7 +138,7 @@ abstract class PatchExecutor
             }
             $escapedArgument = '';
             $quote = false;
-            foreach (preg_split('/(")/', $argument, -1, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE) as $part) {
+            foreach (preg_split('/(")/', $argument, -1, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE) as $part) {
                 if ('"' === $part) {
                     $escapedArgument .= '\\"';
                 } elseif (self::isSurroundedBy($part, '%')) {
@@ -165,6 +165,6 @@ abstract class PatchExecutor
 
     private static function isSurroundedBy($arg, $char)
     {
-        return 2 < strlen($arg) && $char === $arg[0] && $char === $arg[strlen($arg) - 1];
+        return 2 < \strlen($arg) && $char === $arg[0] && $char === $arg[\strlen($arg) - 1];
     }
 }

@@ -38,7 +38,7 @@ class PatchPatcher extends PatchExecutor
     {
         parent::__construct($processExecutor, $io);
         $this->volatileDirectory = $volatileDirectory;
-        if (DIRECTORY_SEPARATOR === '\\') {
+        if (\DIRECTORY_SEPARATOR === '\\') {
             $this->initializeWindows();
         } else {
             $this->initializePosix();
@@ -178,11 +178,11 @@ EOT
             // Ignore patches where the differences have already been applied to the file (aka --forward)
             '-N',
             // Change the working directory (aka --directory)
-            '-d', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $baseDirectory)),
+            '-d', $this->escape(str_replace('/', \DIRECTORY_SEPARATOR, $baseDirectory)),
             // Read patch from PATCHFILE instead of stdin (aka --input)
-            '-i', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $localPatchFile)),
+            '-i', $this->escape(str_replace('/', \DIRECTORY_SEPARATOR, $localPatchFile)),
             // Output rejects to FILE (aka --reject-file)
-            '-r', $this->escape(str_replace('/', DIRECTORY_SEPARATOR, $this->volatileDirectory->getNewPath('.rej'))),
+            '-r', $this->escape(str_replace('/', \DIRECTORY_SEPARATOR, $this->volatileDirectory->getNewPath('.rej'))),
         );
         if ($dryRun) {
             // Do not actually change any files; just print what would happen.

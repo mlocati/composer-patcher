@@ -34,10 +34,10 @@ class PathResolverTest extends TestCase
     {
         return array(
             array('', '', ''),
-            array(__FILE__, '', str_replace(DIRECTORY_SEPARATOR, '/', __FILE__)),
-            array('file://'.__FILE__, '', str_replace(DIRECTORY_SEPARATOR, '/', __FILE__)),
-            array(basename(__FILE__), __DIR__, str_replace(DIRECTORY_SEPARATOR, '/', __FILE__)),
-            array(basename(__FILE__), 'file://'.__DIR__, str_replace(DIRECTORY_SEPARATOR, '/', __FILE__)),
+            array(__FILE__, '', str_replace(\DIRECTORY_SEPARATOR, '/', __FILE__)),
+            array('file://'.__FILE__, '', str_replace(\DIRECTORY_SEPARATOR, '/', __FILE__)),
+            array(basename(__FILE__), __DIR__, str_replace(\DIRECTORY_SEPARATOR, '/', __FILE__)),
+            array(basename(__FILE__), 'file://'.__DIR__, str_replace(\DIRECTORY_SEPARATOR, '/', __FILE__)),
         );
     }
 

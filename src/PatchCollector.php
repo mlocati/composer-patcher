@@ -73,7 +73,7 @@ class PatchCollector
         $extra = $rootPackage->getExtra();
         if (isset($extra['allow-subpatches'])) {
             $allowedSubpatches = $extra['allow-subpatches'];
-            if (!is_bool($allowedSubpatches) && !is_array($allowedSubpatches)) {
+            if (!\is_bool($allowedSubpatches) && !\is_array($allowedSubpatches)) {
                 $this->handleException(new Exception\InvalidPackageConfigurationValue($rootPackage, 'extra.allow-subpatches', $allowedSubpatches, 'The extra.allow-subpatches must be a boolean or an array of strings.'));
             }
             $collectedPatches->merge($this->collectSubpackagePatches($subPackages, $allowedSubpatches));
@@ -95,7 +95,7 @@ class PatchCollector
         $collectedPatches = new PatchCollection();
         if ($allowedSubpatches !== false && $allowedSubpatches !== array()) {
             foreach ($subPackages as $subPackage) {
-                if ($allowedSubpatches === true || in_array($subPackage->getName(), $allowedSubpatches, true)) {
+                if ($allowedSubpatches === true || \in_array($subPackage->getName(), $allowedSubpatches, true)) {
                     $collectedPatches->merge($this->collectPatchesFromPackage($subPackage));
                 }
             }
@@ -140,7 +140,7 @@ class PatchCollector
     protected function resolveExplicitList(PackageInterface $package, $patches)
     {
         $collectedPatches = new PatchCollection();
-        if (!is_array($patches)) {
+        if (!\is_array($patches)) {
             $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches', $patches, 'The extra.patches configuration must be an array.'));
         } else {
             // If the package is the RootPackage, we won't be able to get its install path from the installationmanager
@@ -150,7 +150,7 @@ class PatchCollector
                 $packageDirectory = $this->installationManager->getInstallPath($package);
             }
             foreach ($patches as $forPackageHandle => $patchList) {
-                if (!is_array($patchList)) {
+                if (!\is_array($patchList)) {
                     $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches', $package, "The \"{$forPackageHandle}\" value must be an array."));
                     continue;
                 }
@@ -158,7 +158,7 @@ class PatchCollector
                     try {
                         list($path, $levels) = $this->extractPatchData($package, $patchData);
                         $localFile = $this->pathResolver->resolve($path, $packageDirectory);
-                        if ($localFile === '') {
+                        if ('' === $localFile) {
                             $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches', $package, "The path of the \"{$patchDescription}\" patch is empty or is not a string."));
                         }
                         $collectedPatches->addPatch(
@@ -187,21 +187,21 @@ class PatchCollector
     protected function extractPatchData(PackageInterface $package, $patchData)
     {
         $levels = null;
-        if (is_string($patchData)) {
+        if (\is_string($patchData)) {
             $path = $patchData;
         } else {
-            if (!is_array($patchData) || !isset($patchData['path']) || is_string($patchData['path'])) {
+            if (!\is_array($patchData) || !isset($patchData['path']) || \is_string($patchData['path'])) {
                 throw new Exception\InvalidPackageConfigurationValue($package, 'extra.patches.[...]', $package, "The value of a patch must be a string or an array with a 'path' node value.");
             }
             $path = $patchData['path'];
             if (isset($patchData['levels'])) {
                 $levels = $patchData['levels'];
-                if (!is_array($levels) || empty($levels)) {
+                if (!\is_array($levels) || empty($levels)) {
                     throw new Exception\InvalidPackageConfigurationValue($package, 'extra.patches.[...].levels', $package, 'The patch levels must be an array of strings.');
                 }
             }
         }
-        if ($levels === null) {
+        if (null === $levels) {
             $levels = $this->getDefaultPatchLevels();
         }
 
@@ -221,14 +221,14 @@ class PatchCollector
     protected function resolveJsonFile(PackageInterface $package, $jsonPath)
     {
         $collectedPatches = new PatchCollection();
-        if (!is_string($jsonPath) || $jsonPath === '') {
+        if (!\is_string($jsonPath) || '' === $jsonPath) {
             $this->handleException(Exception\InvalidPackageConfigurationValue($package(), 'extra.patches-file', $jsonPath, 'The extra.patches-file configuration must be a non empty string.'));
         } else {
             $packageDirectory = $this->installationManager->getInstallPath($package);
             $fullJsonPath = $this->pathResolver->resolve($jsonPath, $packageDirectory);
             $jsonReader = new JsonFile($fullJsonPath, null, $this->io);
             $data = $jsonReader->read();
-            if (!is_array($data)) {
+            if (!\is_array($data)) {
                 $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches-file', $jsonPath, "The JSON file at \"{$jsonPath}\" must contain an array."));
             } elseif (!isset($data['patches'])) {
                 $this->handleException(Exception\InvalidPackageConfigurationValue($package, 'extra.patches-file', $jsonPath, "The JSON file at \"{$jsonPath}\" must contain an array with a \"patches\" key."));

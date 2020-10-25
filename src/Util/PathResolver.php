@@ -43,7 +43,6 @@ class PathResolver
      *
      * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory the temporary directory that will hold downloaded patches
      * @param \Composer\Util\RemoteFilesystem $remoteFilesystem the RemoteFilesystem instance to be used to work with remote files
-     * @param VolatileDirectory $volatileFolder
      */
     public function __construct(VolatileDirectory $volatileFolder, RemoteFilesystem $remoteFilesystem)
     {
@@ -64,7 +63,7 @@ class PathResolver
      */
     public function resolve($path, $baseFolder)
     {
-        if (!is_string($path)) {
+        if (!\is_string($path)) {
             return '';
         }
         if (stripos($path, 'file://') === 0) {
