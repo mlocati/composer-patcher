@@ -23,6 +23,7 @@ matrix:
       dist: precise
       php: "7.2"
       install:
+        - travis_retry composer --no-interaction require --no-update --no-scripts friendsofphp/php-cs-fixer:^2.16.4
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .
@@ -31,7 +32,6 @@ matrix:
       dist: precise
       php: "5.3"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -40,7 +40,6 @@ matrix:
       dist: trusty
       php: "5.4"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -49,7 +48,6 @@ matrix:
       dist: trusty
       php: "5.5"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -57,7 +55,6 @@ matrix:
     - name: Test with PHP 5.6
       php: "5.6"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -65,7 +62,6 @@ matrix:
     - name: Test with PHP 7.0
       php: "7.0"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -73,7 +69,6 @@ matrix:
     - name: Test with PHP 7.1
       php: "7.1"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -81,7 +76,6 @@ matrix:
     - name: Test with PHP 7.2
       php: "7.2"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -89,7 +83,6 @@ matrix:
     - name: Test with PHP 7.3
       php: "7.3"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -97,7 +90,6 @@ matrix:
     - name: Test with PHP 7.4
       php: "7.4snapshot"
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - travis_retry composer --no-interaction install
       script:
         - composer --no-interaction test
@@ -105,7 +97,6 @@ matrix:
     - name: Test with PHP Nightly
       php: nightly
       install:
-        - composer --no-interaction remove --dev --no-update --no-scripts friendsofphp/php-cs-fixer
         - composer --no-interaction config platform.php 7.4.0
         - travis_retry composer --no-interaction install
       script:
