@@ -65,7 +65,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private $patcher;
 
     /**
-     * Activate the composer plugin.
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::activate()
      */
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -74,7 +76,27 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::deactivate()
+     */
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::uninstall()
+     */
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Composer\EventDispatcher\EventSubscriberInterface::getSubscribedEvents()
      */
     public static function getSubscribedEvents()
     {
@@ -120,7 +142,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $packages = $this->getLocalRepositoryPackages();
         foreach ($packages as $package) {
             if ($this->mustInstallPatchesForPackage($package)) {
-                $this->installPatchesForPackage($package);
+                $this->installPatchesForPackage($package, $event->isDevMode());
             }
         }
     }
@@ -320,8 +342,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * Install the patches for a specific package.
      *
      * @param \Composer\Package\PackageInterface $package the package to be patched
+     * @param bool $isDevMode
      */
-    protected function installPatchesForPackage(PackageInterface $package)
+    protected function installPatchesForPackage(PackageInterface $package, $isDevMode)
     {
         $considerPatchErrorsAsWarnings = $this->considerPatchErrorsAsWarnings();
         $patches = $this->getPatchCollection()->getPatchesFor($package);
@@ -349,19 +372,23 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             $this->setPatchedPackageData($package, array(
                 'hash' => $patches->getHash(),
                 'list' => $appliedPatchesToSave,
-            ));
+            ), $isDevMode);
         }
     }
 
     /**
      * Persist the patches_applied to the package extra section.
      */
-    protected function setPatchedPackageData(PackageInterface $package, array $patchesAppliedData)
+    protected function setPatchedPackageData(PackageInterface $package, array $patchesAppliedData, $isDevMode)
     {
         $extra = $package->getExtra();
         $extra['patches_applied'] = $patchesAppliedData;
         $package->setExtra($extra);
-        $this->composer->getRepositoryManager()->getLocalRepository()->write();
+        if (version_compare(Composer::RUNTIME_API_VERSION, '2') >= 0) {
+            $this->composer->getRepositoryManager()->getLocalRepository()->write($isDevMode, $this->composer->getInstallationManager());
+        } else {
+            $this->composer->getRepositoryManager()->getLocalRepository()->write();
+        }
     }
 
     /**

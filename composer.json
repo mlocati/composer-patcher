@@ -23,11 +23,11 @@
         "issues": "https://github.com/mlocati/composer-patcher/issues"
     },
     "require": {
-        "composer-plugin-api": "^1.1.0",
+        "composer-plugin-api": "^1.1 || ^2",
         "php": ">= 5.3.2"
     },
     "require-dev": {
-        "composer/composer": "^1.1.0",
+        "composer/composer": "^1.1 || ^2",
         "phpunit/phpunit": "^4.8 || ^5.7 || ^6.5 || ^7.5 || ^8.4"
     },
     "autoload": {
