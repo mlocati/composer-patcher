@@ -65,7 +65,9 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     private $patcher;
 
     /**
-     * Activate the composer plugin.
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::activate()
      */
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -74,7 +76,27 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
-     * Returns an array of event names this subscriber wants to listen to.
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::deactivate()
+     */
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Composer\Plugin\PluginInterface::uninstall()
+     */
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see \Composer\EventDispatcher\EventSubscriberInterface::getSubscribedEvents()
      */
     public static function getSubscribedEvents()
     {

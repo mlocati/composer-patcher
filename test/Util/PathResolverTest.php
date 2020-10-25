@@ -2,6 +2,7 @@
 
 namespace ComposerPatcher\Test\Util;
 
+use Composer\Config;
 use Composer\IO\NullIO;
 use Composer\Util\RemoteFilesystem;
 use ComposerPatcher\Test\TestCase;
@@ -20,7 +21,7 @@ class PathResolverTest extends TestCase
         parent::mySetUpBeforeClass();
         self::$pathResolver = new PathResolver(
             new VolatileDirectory(COMPOSER_PATCHER_TEST_TMP),
-            new RemoteFilesystem(new NullIO())
+            new RemoteFilesystem(new NullIO(), new Config())
         );
     }
 
