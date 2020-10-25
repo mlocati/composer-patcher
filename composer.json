@@ -1,9 +1,7 @@
 {
-    "type": "composer-plugin",
-    "license": "MIT",
     "name": "mlocati/composer-patcher",
     "description": "A Composer plugin to patch Composer packages.",
-    "homepage": "https://github.com/mlocati/composer-patcher",
+    "type": "composer-plugin",
     "keywords": [
         "composer",
         "plugin",
@@ -11,6 +9,8 @@
         "patches",
         "patcher"
     ],
+    "homepage": "https://github.com/mlocati/composer-patcher",
+    "license": "MIT",
     "authors": [
         {
             "name": "Michele Locati",
@@ -19,9 +19,12 @@
             "homepage": "https://mlocati.github.io"
         }
     ],
+    "support": {
+        "issues": "https://github.com/mlocati/composer-patcher/issues"
+    },
     "require": {
-        "php": ">= 5.3.2",
-        "composer-plugin-api": "^1.1.0"
+        "composer-plugin-api": "^1.1.0",
+        "php": ">= 5.3.2"
     },
     "require-dev": {
         "composer/composer": "^1.1.0",
@@ -46,5 +49,19 @@
     "scripts": {
         "codestyle": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist",
         "test": "phpunit --verbose"
-    }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/mlocati"
+        },
+        {
+            "type": "other",
+            "url": "https://paypal.me/mlocati"
+        }
+    ]
 }

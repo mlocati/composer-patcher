@@ -142,3 +142,7 @@ It can be:
 ## Credits
 
 A ton of this code is adapted or taken straight from [`cweagans/composer-patcher`](https://github.com/cweagans/composer-patcher).
+
+## Do you really want to say thank you?
+
+You can offer me a [monthly coffee](https://github.com/sponsors/mlocati) or a [one-time coffee](https://paypal.me/mlocati) :wink:
