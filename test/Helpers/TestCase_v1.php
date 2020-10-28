@@ -43,4 +43,19 @@ abstract class TestCase_v1 extends TestCaseBase
     {
         $this->myTearDown();
     }
+
+    protected static function myAssertMatchesRegularExpression($pattern, $string, $message = '')
+    {
+        static::assertRegExp($pattern, $string, $message);
+    }
+
+    protected static function myAssertDoesNotMatchRegularExpression($pattern, $string, $message = '')
+    {
+        static::assertNotRegExp($pattern, $string, $message);
+    }
+
+    protected static function myAssertFileDoesNotExist($filename, $message = '')
+    {
+        static::assertFileNotExists($filename, $message);
+    }
 }

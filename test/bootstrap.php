@@ -13,7 +13,9 @@ if (!class_exists('PHPUnit\Runner\Version')) {
     class_alias('PHPUnit_Runner_Version', 'PHPUnit\Runner\Version');
 }
 
-if (version_compare(PHPUnit\Runner\Version::id(), '8') >= 0) {
+if (version_compare(PHPUnit\Runner\Version::id(), '9') >= 0) {
+    class_alias('ComposerPatcher\Test\Helpers\TestCase_v3', 'ComposerPatcher\Test\Helpers\TestCase');
+} elseif (version_compare(PHPUnit\Runner\Version::id(), '8') >= 0) {
     class_alias('ComposerPatcher\Test\Helpers\TestCase_v2', 'ComposerPatcher\Test\Helpers\TestCase');
 } else {
     class_alias('ComposerPatcher\Test\Helpers\TestCase_v1', 'ComposerPatcher\Test\Helpers\TestCase');

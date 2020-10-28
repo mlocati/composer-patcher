@@ -37,6 +37,6 @@ class VolatileDirectoryTest extends TestCase
         touch($vd->getNewPath());
         mkdir($vd->getNewPath());
         unset($vd);
-        $this->assertFileNotExists($dir);
+        $this->myAssertFileDoesNotExist($dir);
     }
 }

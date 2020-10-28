@@ -52,24 +52,24 @@ class PatchingTest extends TestCase
             $installer = Installer::create($io, $composer)->setUpdate(true);
             $rc = $installer->run();
             $loggedLines = trim($io->getLoggedLines());
-            $this->assertSame(0, $rc, "composer update failed:\n{$loggedLines}");
+            $this->assertSame(0, $rc, "composer update failed at cycle #{$cycle}.\nOutput:\n{$loggedLines}");
             $patchedFileContents = file_get_contents($this->volatileDirectory->getPath().'//patchme.txt');
             if ($allowSubpatches) {
-                $this->assertFalse(strpos($loggedLines, 'No patches supplied') !== false, "No patches should be applied, but output doesn't contain it:\n{$loggedLines}");
+                $this->assertFalse(strpos($loggedLines, 'No patches supplied') !== false, "Patches should be applied, but output doesn't state that at cycle #{$cycle}.\nOutput:\n{$loggedLines}");
                 switch ($cycle) {
                     case 1:
-                        $this->assertRegExp('/Patching file [^\r\n]+\bdone\b/', $loggedLines, $loggedLines);
+                        $this->myAssertMatchesRegularExpression('/Patching file [^\r\n]+\bdone\b/', $loggedLines, $loggedLines);
                         $this->assertFalse(strpos($loggedLines, 'patch was already applied') !== false, $loggedLines);
                         break;
                     case 2:
-                        $this->assertNotRegExp('/Patching file [^\r\n]+\bdone\b/', $loggedLines, $loggedLines);
+                        $this->myAssertDoesNotMatchRegularExpression('/Patching file [^\r\n]+\bdone\b/', $loggedLines, $loggedLines);
                         $this->assertTrue(strpos($loggedLines, 'patch was already applied') !== false, $loggedLines);
                         break;
                 }
                 $this->assertTrue(strpos($patchedFileContents, 'Really useful!') !== false, 'File has not been patched!');
                 $this->assertFalse(strpos($patchedFileContents, 'Quite useless.') !== false, 'File has been wrongly patched!');
             } else {
-                $this->assertTrue(strpos($loggedLines, 'No patches supplied') !== false, "No patches should be applied, but output doesn't contain it:\n{$loggedLines}");
+                $this->assertTrue(strpos($loggedLines, 'No patches supplied') !== false, "No patches should be applied, but output doesn't state that.\nOutput:\n{$loggedLines}");
                 $this->assertTrue(strpos($patchedFileContents, 'Quite useless.') !== false, 'File has been patched!');
                 $this->assertFalse(strpos($patchedFileContents, 'Really useful!') !== false, 'File has been patched!');
             }
