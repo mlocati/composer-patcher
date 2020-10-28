@@ -2,9 +2,11 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-define('COMPOSER_PATCHER_TEST_TMP', __DIR__.'/tmp');
-if (!is_dir(COMPOSER_PATCHER_TEST_TMP)) {
-    mkdir(COMPOSER_PATCHER_TEST_TMP);
+define('COMPOSER_PATCHER_TEST_DIRROOT', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)));
+define('COMPOSER_PATCHER_TEST_DIRTEST', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
+define('COMPOSER_PATCHER_TEST_DIRTMP', COMPOSER_PATCHER_TEST_DIRTEST.'/tmp');
+if (!is_dir(COMPOSER_PATCHER_TEST_DIRTMP)) {
+    mkdir(COMPOSER_PATCHER_TEST_DIRTMP);
 }
 
 if (!class_exists('PHPUnit\Runner\Version')) {
@@ -12,7 +14,7 @@ if (!class_exists('PHPUnit\Runner\Version')) {
 }
 
 if (version_compare(PHPUnit\Runner\Version::id(), '8') >= 0) {
-    class_alias('ComposerPatcher\Test\TestCase_v2', 'ComposerPatcher\Test\TestCase');
+    class_alias('ComposerPatcher\Test\Helpers\TestCase_v2', 'ComposerPatcher\Test\Helpers\TestCase');
 } else {
-    class_alias('ComposerPatcher\Test\TestCase_v1', 'ComposerPatcher\Test\TestCase');
+    class_alias('ComposerPatcher\Test\Helpers\TestCase_v1', 'ComposerPatcher\Test\Helpers\TestCase');
 }

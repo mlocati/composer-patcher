@@ -1,0 +1,17 @@
+{
+	"name": "mlocati/composer-patcher-sample-patcher",
+	"description": "Test library",
+	"type": "library",
+	"license": "MIT",
+	"require": {
+		"mlocati/composer-patcher": "*"
+	},
+	"minimum-stability": "dev",
+	"extra": {
+		"patches": {
+			"mlocati/composer-patcher-sample-project": {
+				"Patching file": "patches/test.patch"
+			}
+		}
+	}
+}

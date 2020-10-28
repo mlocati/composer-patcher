@@ -1,0 +1,9 @@
+--- a/patchme.txt
++++ b/patchme.txt
+@@ -1,3 +1,3 @@
+ This is a sample file
+ with some sample content.
+-Quite useless.
+\ No newline at end of file
++Really useful!
+\ No newline at end of file

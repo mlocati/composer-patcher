@@ -1,8 +1,8 @@
 <?php
 
-namespace ComposerPatcher\Test\Util;
+namespace ComposerPatcher\Test\Tests;
 
-use ComposerPatcher\Test\TestCase;
+use ComposerPatcher\Test\Helpers\TestCase;
 use ComposerPatcher\Util\VolatileDirectory;
 
 class VolatileDirectoryTest extends TestCase
@@ -31,7 +31,7 @@ class VolatileDirectoryTest extends TestCase
 
     public function testDirectoryDeleted()
     {
-        $vd = new VolatileDirectory(COMPOSER_PATCHER_TEST_TMP);
+        $vd = new VolatileDirectory(COMPOSER_PATCHER_TEST_DIRTMP);
         $dir = $vd->getPath();
         $this->assertFileExists($dir);
         touch($vd->getNewPath());

@@ -378,6 +378,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Persist the patches_applied to the package extra section.
+     *
+     * @param bool $isDevMode
      */
     protected function setPatchedPackageData(PackageInterface $package, array $patchesAppliedData, $isDevMode)
     {
@@ -418,15 +420,20 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $repositoryManager = $this->composer->getRepositoryManager();
         $localRepository = $repositoryManager->getLocalRepository();
         $packages = $localRepository->getPackages();
-        if ($excludeRootPackage) {
-            $result = array();
-            foreach ($packages as $package) {
-                if (!$package instanceof RootPackageInterface) {
+        $rootRepository = null;
+        $result = array();
+        foreach ($packages as $package) {
+            if ($package instanceof RootPackageInterface) {
+                $rootRepository = $package;
+                if (!$excludeRootPackage) {
                     $result[] = $package;
                 }
+            } else {
+                $result[] = $package;
             }
-        } else {
-            $result = $packages;
+        }
+        if (!$excludeRootPackage && $rootRepository === null) {
+            $result[] = $this->composer->getPackage();
         }
 
         return $result;

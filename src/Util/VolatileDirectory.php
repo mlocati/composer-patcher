@@ -103,7 +103,7 @@ class VolatileDirectory
     public function getNewPath($suffix = '')
     {
         $result = $this->getPath().'/'.$this->uniqueCounter.(string) $suffix;
-        ++$this->uniqueCounter;
+        $this->uniqueCounter++;
 
         return $result;
     }

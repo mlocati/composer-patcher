@@ -15,7 +15,7 @@
 >
     <testsuites>
         <testsuite name="ComposerPatches Test Suite">
-            <directory>./test/</directory>
+            <directory>./test/Tests</directory>
         </testsuite>
     </testsuites>
     <filter>
