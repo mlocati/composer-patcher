@@ -1,4 +1,4 @@
-![Build Status](https://github.com/mlocati/composer-patcher/workflows/Run%20PHPUnit/badge.svg?branch=master)
+![Build Status](https://github.com/mlocati/composer-patcher/workflows/PHPUnit%20tests/badge.svg?branch=master)
 
 # composer-patcher
 
