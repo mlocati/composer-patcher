@@ -2,7 +2,7 @@
 
 namespace ComposerPatcher\Test\Helpers;
 
-abstract class TestCase_v2 extends TestCaseBase
+abstract class TestCase_v3 extends TestCaseBase
 {
     /**
      * {@inheritdoc}
@@ -46,16 +46,16 @@ abstract class TestCase_v2 extends TestCaseBase
 
     protected static function myAssertMatchesRegularExpression(string $pattern, string $string, string $message = ''): void
     {
-        static::assertRegExp(...\func_get_args());
+        static::assertMatchesRegularExpression(...\func_get_args());
     }
 
     protected static function myAssertDoesNotMatchRegularExpression(string $pattern, string $string, string $message = ''): void
     {
-        static::assertNotRegExp(...\func_get_args());
+        static::assertDoesNotMatchRegularExpression(...\func_get_args());
     }
 
     protected static function myAssertFileDoesNotExist(string $filename, string $message = ''): void
     {
-        static::assertFileNotExists(...\func_get_args());
+        static::assertFileDoesNotExist(...\func_get_args());
     }
 }
