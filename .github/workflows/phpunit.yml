@@ -29,6 +29,13 @@ jobs:
         composer-version:
           - 1
           - 2
+        exclude:
+          - # It seems that's not possible to install dependencies on Wihdows with PHP 5.3
+            operating-system: windows-latest
+            php-version: "5.3"
+          - # It seems that's not possible to install dependencies on Wihdows with PHP 5.4
+            operating-system: windows-latest
+            php-version: "5.4"
     name: PHP ${{ matrix.php-version }} with Composer ${{ matrix.composer-version }} on ${{ matrix.operating-system }}
     runs-on: ${{ matrix.operating-system }}
     steps:
