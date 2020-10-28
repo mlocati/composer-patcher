@@ -1,0 +1,28 @@
+name: Check coding style
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  php:
+    name: PHP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: composer:v2
+      - name: Installing php-cs-fixer
+        run: composer global require --optimize-autoloader --no-interaction --no-cache friendsofphp/php-cs-fixer:^2.16 
+      - name: Check PHP coding style
+        run: php-cs-fixer fix --config=./.php_cs.dist --path-mode=intersection --dry-run --using-cache=no --diff --diff-format=udiff --show-progress=none --verbose --no-interaction --ansi .

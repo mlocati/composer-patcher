@@ -18,15 +18,6 @@ matrix:
   allow_failures:
     - name: Test with PHP Nightly
   include:
-    - name: Check coding style
-      dist: precise
-      php: "7.2"
-      install:
-        - travis_retry composer --no-interaction require --no-update --no-scripts friendsofphp/php-cs-fixer:^2.16.4
-        - travis_retry composer --no-interaction install
-      script:
-        - composer --no-interaction codestyle -- --no-interaction --dry-run --diff -- .
-
     - name: Test with PHP 5.3
       dist: precise
       php: "5.3"
