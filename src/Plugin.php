@@ -10,7 +10,7 @@ use Composer\Package\AliasPackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\Event;
+use Composer\Script\Event as ComposerEvent;
 use Composer\Script\ScriptEvents;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\RemoteFilesystem;
@@ -111,7 +111,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Before running composer install/update, let's uninstall some packages.
      */
-    public function preOperation(Event $event)
+    public function preOperation(ComposerEvent $event)
     {
         $patchCollection = $this->getPatchCollection();
         if ($patchCollection->isEmpty()) {
@@ -130,7 +130,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @throws \Exception
      */
-    public function postOperation(Event $event)
+    public function postOperation(ComposerEvent $event)
     {
         $this->refreshPatchCollection();
         $patchCollection = $this->getPatchCollection();
