@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/mlocati/composer-patcher.svg?branch=master)](https://travis-ci.com/mlocati/composer-patcher)
+![Build Status](https://github.com/mlocati/composer-patcher/workflows/Run%20PHPUnit/badge.svg?branch=master)
 
 # composer-patcher
 
