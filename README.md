@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mlocati/composer-patcher.svg?branch=master)](https://travis-ci.org/mlocati/composer-patcher)
+[![Build Status](https://travis-ci.com/mlocati/composer-patcher.svg?branch=master)](https://travis-ci.com/mlocati/composer-patcher)
 
 # composer-patcher
 

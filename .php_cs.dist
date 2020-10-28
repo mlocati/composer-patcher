@@ -11,6 +11,7 @@ return PhpCsFixer\Config::create()
     ->setRules(array(
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        'increment_style' => array('style' => 'post'),
         'array_syntax' => array('syntax' => 'long'),
         'no_php4_constructor' => true,
         'no_unreachable_default_argument_value' => true,
@@ -30,12 +31,12 @@ return PhpCsFixer\Config::create()
         'single_line_throw' => false,
     ))
     ->setFinder(PhpCsFixer\Finder::create()
-        ->exclude(array(
-            'src/data',
-            'tests/dataFiles',
-            'vendor',
+        ->in(array(
+            __DIR__.'/src',
+            __DIR__.'/test',
         ))
-        ->in(__DIR__)
-        ->append(array(__FILE__))
+        ->append(array(
+            __FILE__,
+        ))
     )
 ;

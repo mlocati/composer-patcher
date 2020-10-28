@@ -1,6 +1,6 @@
 <?php
 
-namespace ComposerPatcher\Test;
+namespace ComposerPatcher\Test\Helpers;
 
 use Exception;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
@@ -43,5 +43,13 @@ abstract class TestCaseBase extends PHPUnitTestCase
                 }
             }
         }
+    }
+
+    protected function mySetUp()
+    {
+    }
+
+    protected function myTearDown()
+    {
     }
 }

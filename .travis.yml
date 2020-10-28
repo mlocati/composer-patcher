@@ -87,7 +87,7 @@ matrix:
         - composer --no-interaction test
 
     - name: Test with PHP 7.4
-      php: "7.4snapshot"
+      php: "7.4"
       install:
         - travis_retry composer --no-interaction install
       script:

@@ -6,6 +6,7 @@ use Composer\EventDispatcher\EventDispatcher;
 use Composer\Installer\InstallationManager;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
+use Composer\Package\RootPackage;
 use Composer\Util\ProcessExecutor;
 use ComposerPatcher\Event\Patch as PatchEvent;
 use ComposerPatcher\PatchExecutor\GitPatcher;
@@ -70,7 +71,11 @@ class Patcher
     public function applyPatch(Patch $patch, PackageInterface $package)
     {
         $this->io->write('<info>Applying patch '.$patch->getFromPackage()->getName().'/'.$patch->getDescription().' to '.$package->getName().'... </info>', false);
-        $baseDirectory = $this->installationManager->getInstallPath($package);
+        if ($package instanceof RootPackage) {
+            $baseDirectory = getcwd();
+        } else {
+            $baseDirectory = $this->installationManager->getInstallPath($package);
+        }
         $this->eventDispatcher->dispatch(null, new PatchEvent(PatchEvent::EVENTNAME_PRE_APPLY_PATCH, $patch));
         try {
             if (GitPatcher::shouldBeUsetToApplyPatchesTo($baseDirectory)) {

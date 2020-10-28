@@ -10,7 +10,7 @@ use Composer\Package\AliasPackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Plugin\PluginInterface;
-use Composer\Script\Event;
+use Composer\Script\Event as ComposerEvent;
 use Composer\Script\ScriptEvents;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\RemoteFilesystem;
@@ -111,7 +111,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Before running composer install/update, let's uninstall some packages.
      */
-    public function preOperation(Event $event)
+    public function preOperation(ComposerEvent $event)
     {
         $patchCollection = $this->getPatchCollection();
         if ($patchCollection->isEmpty()) {
@@ -130,7 +130,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @throws \Exception
      */
-    public function postOperation(Event $event)
+    public function postOperation(ComposerEvent $event)
     {
         $this->refreshPatchCollection();
         $patchCollection = $this->getPatchCollection();
@@ -378,6 +378,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     /**
      * Persist the patches_applied to the package extra section.
+     *
+     * @param bool $isDevMode
      */
     protected function setPatchedPackageData(PackageInterface $package, array $patchesAppliedData, $isDevMode)
     {
@@ -418,15 +420,20 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $repositoryManager = $this->composer->getRepositoryManager();
         $localRepository = $repositoryManager->getLocalRepository();
         $packages = $localRepository->getPackages();
-        if ($excludeRootPackage) {
-            $result = array();
-            foreach ($packages as $package) {
-                if (!$package instanceof RootPackageInterface) {
+        $rootRepository = null;
+        $result = array();
+        foreach ($packages as $package) {
+            if ($package instanceof RootPackageInterface) {
+                $rootRepository = $package;
+                if (!$excludeRootPackage) {
                     $result[] = $package;
                 }
+            } else {
+                $result[] = $package;
             }
-        } else {
-            $result = $packages;
+        }
+        if (!$excludeRootPackage && $rootRepository === null) {
+            $result[] = $this->composer->getPackage();
         }
 
         return $result;
