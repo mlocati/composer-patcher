@@ -140,7 +140,12 @@ class PatchingTest extends TestCase
                 ),
             );
         }
-        $vDir = new VolatileDirectory(version_compare(Composer::RUNTIME_API_VERSION, '2') ? sys_get_temp_dir() : COMPOSER_PATCHER_TEST_DIRTMP);
+        if (\defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2') >= 0) {
+            $rootTempDir = COMPOSER_PATCHER_TEST_DIRTMP;
+        } else {
+            $rootTempDir = sys_get_temp_dir();
+        }
+        $vDir = new VolatileDirectory($rootTempDir);
         file_put_contents(
             $vDir->getPath().'/composer.json',
             json_encode(
