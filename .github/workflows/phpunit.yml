@@ -55,6 +55,6 @@ jobs:
           coverage: none
           tools: composer:v${{ matrix.composer-version }}
       - name: Install dependencies
-        run: composer --no-interaction --ansi install --no-cache --no-progress --optimize-autoloader
+        run: composer --no-interaction --ansi install --no-progress --optimize-autoloader
       - name: Test
         run: composer --no-interaction --ansi run-script test -- --colors=always
