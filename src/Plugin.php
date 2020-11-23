@@ -386,7 +386,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $extra = $package->getExtra();
         $extra['patches_applied'] = $patchesAppliedData;
         $package->setExtra($extra);
-        if (\defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2') >= 0) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2') >= 0) {
             $this->composer->getRepositoryManager()->getLocalRepository()->write($isDevMode, $this->composer->getInstallationManager());
         } else {
             $this->composer->getRepositoryManager()->getLocalRepository()->write();
