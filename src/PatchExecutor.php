@@ -111,7 +111,7 @@ abstract class PatchExecutor
         }
         list($rc, , $stdErr) = $this->run($command);
         if (0 !== $rc) {
-            throw new Exception\CommandNotFound($commandName, $stdErr ? $stdErr : null);
+            throw new Exception\CommandNotFound($commandName, $stdErr ?: null);
         }
     }
 
