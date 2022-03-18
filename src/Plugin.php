@@ -118,10 +118,17 @@ class Plugin implements PluginInterface, EventSubscriberInterface
             return;
         }
         $packages = $this->getLocalRepositoryPackages();
+        $promises = array();
         foreach ($packages as $package) {
             if ($this->mustUninstallPackage($package)) {
-                $this->uninstallPackage($package);
+                $promise = $this->uninstallPackage($package);
+                if ($promise) {
+                    $promises[] = $promise;
+                }
             }
+        }
+        if ($promises !== array() && method_exists($this->composer, 'getLoop')) {
+            $this->composer->getLoop()->wait($promises);
         }
     }
 
@@ -397,6 +404,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * Uninstall a package.
      *
      * @param \Composer\Package\PackageInterface $package the package to be uninstalled
+     *
+     * @return \React\Promise\PromiseInterface|null
      */
     protected function uninstallPackage(PackageInterface $package)
     {
@@ -405,7 +414,8 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         $installationManager = $this->composer->getInstallationManager();
         $repositoryManager = $this->composer->getRepositoryManager();
         $localRepository = $repositoryManager->getLocalRepository();
-        $installationManager->uninstall($localRepository, $uninstallOperation);
+
+        return $installationManager->uninstall($localRepository, $uninstallOperation);
     }
 
     /**
