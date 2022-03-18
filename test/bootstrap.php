@@ -2,8 +2,8 @@
 
 require_once dirname(__DIR__).'/vendor/autoload.php';
 
-define('COMPOSER_PATCHER_TEST_DIRROOT', str_replace(DIRECTORY_SEPARATOR, '/', dirname(__DIR__)));
-define('COMPOSER_PATCHER_TEST_DIRTEST', str_replace(DIRECTORY_SEPARATOR, '/', __DIR__));
+define('COMPOSER_PATCHER_TEST_DIRROOT', str_replace(\DIRECTORY_SEPARATOR, '/', dirname(__DIR__)));
+define('COMPOSER_PATCHER_TEST_DIRTEST', str_replace(\DIRECTORY_SEPARATOR, '/', __DIR__));
 define('COMPOSER_PATCHER_TEST_DIRTMP', COMPOSER_PATCHER_TEST_DIRTEST.'/tmp');
 if (!is_dir(COMPOSER_PATCHER_TEST_DIRTMP)) {
     mkdir(COMPOSER_PATCHER_TEST_DIRTMP);

@@ -150,7 +150,7 @@ class PatchingTest extends TestCase
             $vDir->getPath().'/composer.json',
             json_encode(
                 $composerJson,
-                0 | (\defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : 0) | (\defined('JSON_UNESCAPED_SLASHES') ? JSON_UNESCAPED_SLASHES : 0)
+                0 | (\defined('JSON_PRETTY_PRINT') ? \JSON_PRETTY_PRINT : 0) | (\defined('JSON_UNESCAPED_SLASHES') ? \JSON_UNESCAPED_SLASHES : 0)
             )
         );
         file_put_contents($vDir->getPath().'/patchme.txt', <<<'EOT'

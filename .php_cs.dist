@@ -1,8 +1,8 @@
 <?php
 
 if (!class_exists('PhpCsFixer\Config', true)) {
-    fwrite(STDERR, "Your php-cs-version is outdated: please upgrade it.\n");
-    die(16);
+    fwrite(\STDERR, "Your php-cs-version is outdated: please upgrade it.\n");
+    exit(16);
 }
 
 return PhpCsFixer\Config::create()
