@@ -190,13 +190,13 @@ class PatchCollector
         if (\is_string($patchData)) {
             $path = $patchData;
         } else {
-            if (!\is_array($patchData) || !isset($patchData['path']) || \is_string($patchData['path'])) {
+            if (!\is_array($patchData) || !isset($patchData['path']) || !\is_string($patchData['path'])) {
                 throw new Exception\InvalidPackageConfigurationValue($package, 'extra.patches.[...]', $package, "The value of a patch must be a string or an array with a 'path' node value.");
             }
             $path = $patchData['path'];
             if (isset($patchData['levels'])) {
                 $levels = $patchData['levels'];
-                if (!\is_array($levels) || empty($levels)) {
+                if (!\is_array($levels) || $levels === array()) {
                     throw new Exception\InvalidPackageConfigurationValue($package, 'extra.patches.[...].levels', $package, 'The patch levels must be an array of strings.');
                 }
             }
