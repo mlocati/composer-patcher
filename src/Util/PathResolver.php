@@ -44,11 +44,11 @@ class PathResolver
      * @param \ComposerPatcher\Util\VolatileDirectory $volatileDirectory the temporary directory that will hold downloaded patches
      * @param \Composer\Util\RemoteFilesystem $remoteFilesystem the RemoteFilesystem instance to be used to work with remote files
      */
-    public function __construct(VolatileDirectory $volatileFolder, RemoteFilesystem $remoteFilesystem)
+    public function __construct(VolatileDirectory $volatileDirectory, RemoteFilesystem $remoteFilesystem)
     {
-        $this->volatileFolder = $volatileFolder;
+        $this->volatileDirectory = $volatileDirectory;
         $this->remoteFilesystem = $remoteFilesystem;
-        $this->filesystem = $volatileFolder->getFilesystem();
+        $this->filesystem = $volatileDirectory->getFilesystem();
     }
 
     /**
@@ -115,7 +115,7 @@ class PathResolver
     private function resolveRemotePath($path)
     {
         if (!isset($this->resolvedRemotePath[$path])) {
-            $resolvedPath = $this->volatileFolder->getNewPath();
+            $resolvedPath = $this->volatileDirectory->getNewPath();
             if ($this->remoteFilesystem->copy($path, $path, $resolvedPath) !== true) {
                 throw new Exception\PathNotFound($path);
             }
