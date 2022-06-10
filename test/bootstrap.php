@@ -20,3 +20,9 @@ if (version_compare(PHPUnit\Runner\Version::id(), '9') >= 0) {
 } else {
     class_alias('ComposerPatcher\Test\Helpers\TestCase_v1', 'ComposerPatcher\Test\Helpers\TestCase');
 }
+
+if (class_exists('Composer\Composer') && defined('Composer\Composer::VERSION') && version_compare(Composer\Composer::VERSION, '2.3.0') >= 0) {
+    class_alias('ComposerPatcher\Test\Helpers\MemoryIO_v2', 'ComposerPatcher\Test\Helpers\MemoryIO');
+} else {
+    class_alias('ComposerPatcher\Test\Helpers\MemoryIO_v1', 'ComposerPatcher\Test\Helpers\MemoryIO');
+}

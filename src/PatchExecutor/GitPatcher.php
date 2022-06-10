@@ -41,7 +41,7 @@ class GitPatcher extends PatchExecutor
      */
     public static function shouldBeUsetToApplyPatchesTo($baseDirectory)
     {
-        return is_dir("${baseDirectory}/.git");
+        return is_dir("{$baseDirectory}/.git");
     }
 
     /**

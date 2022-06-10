@@ -2,20 +2,8 @@
 
 namespace ComposerPatcher\Test\Helpers;
 
-use Composer\IO\NullIO;
-
-class MemoryIO extends NullIO
+class MemoryIO_v1 extends MemoryIOBase
 {
-    private $loggedLines = '';
-
-    /**
-     * @return string
-     */
-    public function getLoggedLines()
-    {
-        return $this->loggedLines;
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -54,14 +42,5 @@ class MemoryIO extends NullIO
     public function overwriteError($messages, $newline = true, $size = 80, $verbosity = self::NORMAL)
     {
         $this->addLoggedLine($messages, $newline);
-    }
-
-    /**
-     * @param string|string[] $messages
-     * @param bool $newline
-     */
-    private function addLoggedLine($messages, $newline)
-    {
-        $this->loggedLines .= implode("\n", (array) $messages).($newline ? "\n" : '');
     }
 }
