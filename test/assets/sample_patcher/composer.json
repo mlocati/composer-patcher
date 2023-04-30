@@ -7,6 +7,11 @@
 		"mlocati/composer-patcher": "*"
 	},
 	"minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "mlocati/composer-patcher": true
+        }
+    },
 	"extra": {
 		"patches": {
 			"mlocati/composer-patcher-sample-project": {

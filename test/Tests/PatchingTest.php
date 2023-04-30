@@ -132,6 +132,11 @@ class PatchingTest extends TestCase
                 'patch-errors-as-warnings' => false,
                 'patch-temporary-folder' => $this->volatileDirectoryTemp->getPath(),
             ),
+            'config' => array(
+                'allow-plugins' => array(
+                    'mlocati/composer-patcher' => true,
+                ),
+            ),
         );
         if ($allowSubpatches) {
             $composerJson['extra'] += array(
