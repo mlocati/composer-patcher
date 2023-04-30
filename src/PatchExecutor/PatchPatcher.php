@@ -173,6 +173,12 @@ EOT
         $chunks = array(
             $this->command,
             $this->escape($patchLevel),
+            // Suppress questions,
+            // skip patches whose headers do not contain file names,
+            // skip patches for which the file has the wrong version for the Prereq: line in the patch,
+            // assume that patches are reversed if they look like they are
+            // (aka --batch)
+            '-t',
             // Back up mismatches only if otherwise requested
             '--no-backup-if-mismatch',
             // Ignore patches where the differences have already been applied to the file (aka --forward)
