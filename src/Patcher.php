@@ -64,8 +64,6 @@ class Patcher
     /**
      * Apply a patch to a package.
      *
-     * @param \ComposerPatcher\Patch $patch
-     *
      * @throws \Exception in case of errors
      */
     public function applyPatch(Patch $patch, PackageInterface $package)

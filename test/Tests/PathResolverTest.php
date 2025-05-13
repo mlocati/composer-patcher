@@ -45,9 +45,9 @@ class PathResolverTest extends TestCase
     /**
      * @dataProvider resolvePathProvider
      *
-     * @param mixed $path
-     * @param mixed $baseFolder
-     * @param mixed $expected
+     * @param string $path
+     * @param string $baseFolder
+     * @param string $expected
      */
     public function testResolvePath($path, $baseFolder, $expected)
     {

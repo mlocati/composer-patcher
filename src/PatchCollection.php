@@ -19,8 +19,6 @@ class PatchCollection
     /**
      * Add a collected patch.
      *
-     * @param \ComposerPatcher\Patch $patch
-     *
      * @return $this
      */
     public function addPatch(Patch $patch)
@@ -52,8 +50,6 @@ class PatchCollection
 
     /**
      * Merge another patch collection into this collection.
-     *
-     * @param \ComposerPatcher\PatchCollection $otherCollection
      *
      * @return $this
      */

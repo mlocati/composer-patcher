@@ -421,7 +421,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     /**
      * Get the packages from the local Composer repository.
      *
-     * @param mixed $excludeRootPackage
+     * @param bool $excludeRootPackage
      *
      * @return \Composer\Package\PackageInterface[]
      */
