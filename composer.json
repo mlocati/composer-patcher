@@ -47,7 +47,6 @@
         "cweagans/composer-patches": "*"
     },
     "scripts": {
-        "codestyle": "php-cs-fixer fix --path-mode=intersection --config=.php_cs.dist",
         "test": "phpunit --verbose"
     },
     "config": {

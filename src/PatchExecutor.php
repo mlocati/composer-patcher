@@ -78,11 +78,10 @@ abstract class PatchExecutor
      * Run a command and return the exit code.
      *
      * @param string $command The command to be executed
-     * @param mixed|null $standardInput
      *
      * @return array First element is the command return code, second element is the standard output, thirg element is the standard error
      */
-    protected function run($command, $standardInput = null)
+    protected function run($command)
     {
         $stdOut = '';
         $stdErr = '';
@@ -128,10 +127,10 @@ abstract class PatchExecutor
      */
     protected function escape($argument)
     {
-        //Fix for PHP bug #43784 escapeshellarg removes % from given string
-        //Fix for PHP bug #49446 escapeshellarg doesn't work on Windows
-        //@see https://bugs.php.net/bug.php?id=43784
-        //@see https://bugs.php.net/bug.php?id=49446
+        // Fix for PHP bug #43784 escapeshellarg removes % from given string
+        // Fix for PHP bug #49446 escapeshellarg doesn't work on Windows
+        // @see https://bugs.php.net/bug.php?id=43784
+        // @see https://bugs.php.net/bug.php?id=49446
         if ('\\' === \DIRECTORY_SEPARATOR) {
             if ('' === $argument) {
                 return escapeshellarg($argument);

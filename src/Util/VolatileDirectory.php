@@ -41,14 +41,14 @@ class VolatileDirectory
      * @param string $parentDirectory the parent directory where the volatile directory will be created
      * @param \Composer\Util\Filesystem $filesystem|null The composer file system instance to be used
      */
-    public function __construct($parentDirectory = '', Filesystem $filesystem = null)
+    public function __construct($parentDirectory = '', $filesystem = null)
     {
         $parentDirectory = str_replace(\DIRECTORY_SEPARATOR, '/', (string) $parentDirectory);
         if ($parentDirectory !== '/') {
             $parentDirectory = rtrim($parentDirectory, '/');
         }
         $this->parentDirectory = $parentDirectory;
-        $this->filesystem = $filesystem === null ? new Filesystem() : $filesystem;
+        $this->filesystem = $filesystem instanceof Filesystem ? $filesystem : new Filesystem();
     }
 
     /**
@@ -140,7 +140,7 @@ class VolatileDirectory
             if (!is_writable($parentDirectory)) {
                 throw new Exception\PathNotWritable($parentDirectory);
             }
-            for (;;) {
+            while (true) {
                 $tempNam = @tempnam($parentDirectory, 'PCH');
                 if ($tempNam === false) {
                     throw new Exception\PathNotCreated("{$parentDirectory}/<TEMPORARY>");

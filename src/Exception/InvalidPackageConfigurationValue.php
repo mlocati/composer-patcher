@@ -26,8 +26,6 @@ class InvalidPackageConfigurationValue extends Exception
 
     /**
      * The value of the invalid configuration.
-     *
-     * @var mixed
      */
     protected $configurationValue;
 
@@ -75,8 +73,6 @@ class InvalidPackageConfigurationValue extends Exception
 
     /**
      * Get the value of the invalid configuration.
-     *
-     * @return mixed
      */
     public function getConfigurationValue()
     {
