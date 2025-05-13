@@ -26,6 +26,11 @@ class PatchPatcher extends PatchExecutor
     private $volatileDirectory;
 
     /**
+     * @var bool|null
+     */
+    private $useNoBackupIfMismatch;
+
+    /**
      * Initialize the instance.
      *
      * @param \Composer\Util\ProcessExecutor $processExecutor the ProcessExecutor instance to be used to actually run commands
@@ -174,7 +179,7 @@ EOT
             $this->command,
             $this->escape($patchLevel),
             // Back up mismatches only if otherwise requested
-            '--no-backup-if-mismatch',
+            $this->useNoBackupIfMismatch() ? '--no-backup-if-mismatch' : '',
             // Ignore patches where the differences have already been applied to the file (aka --forward)
             '-N',
             // Change the working directory (aka --directory)
@@ -188,7 +193,27 @@ EOT
             // Do not actually change any files; just print what would happen.
             $chunks[] = '--dry-run';
         }
+        $chunks = array_filter($chunks, function ($chunk) { return $chunk !== ''; });
 
         return implode(' ', $chunks);
+    }
+
+    /**
+     * Should we use --no-backup-if-mismatch?
+     * --no-backup-if-mismatch is required with the GNU implementation of patch in order to avoid backups in case if mismatches.
+     * On FreeBSD that's the default behaviour, and the --no-backup-if-mismatch is not available.
+     *
+     * @return bool
+     */
+    private function useNoBackupIfMismatch()
+    {
+        if ($this->useNoBackupIfMismatch === null) {
+            list(, $stdOut, $stdErr) = $this->run("{$this->command} --help");
+            // On GNU we have the usage in stdOut
+            // On FreeBSD the --help option does not exists, and the usage is sent to stdErr
+            $this->useNoBackupIfMismatch = strpos((string) $stdOut, '--no-backup-if-mismatch') !== false || strpos((string) $stdErr, '--no-backup-if-mismatch') !== false;
+        }
+
+        return $this->useNoBackupIfMismatch;
     }
 }
