@@ -1,0 +1,181 @@
+name: Tests
+
+on:
+  push:
+    branches:
+    - main
+    tags-ignore:
+    - "**"
+  pull_request:
+    branches:
+    - main
+
+jobs:
+
+  php-syntax:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        -
+          php-version: "5.3"
+          exclude: |
+            test/Helpers/MemoryIO_v2.php
+            test/Helpers/TestCase_v2.php
+            test/Helpers/TestCase_v3.php
+        -
+          php-version: "5.6"
+          exclude: |
+            test/Helpers/MemoryIO_v2.php
+            test/Helpers/TestCase_v2.php
+            test/Helpers/TestCase_v3.php
+        -
+          php-version: "7.0"
+          exclude: |
+            test/Helpers/MemoryIO_v2.php
+            test/Helpers/TestCase_v2.php
+            test/Helpers/TestCase_v3.php
+        -
+          php-version: "7.4"
+        -
+          php-version: "8.0"
+        -
+          php-version: "8.4"
+    name: Check PHP ${{ matrix.php-version }} syntax
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: opcache
+          tools: none
+          coverage: none
+      -
+        name: Check syntax
+        uses: mlocati/check-php-syntax@v1
+        with:
+          exclude: ${{ matrix.exclude }}
+          fail-on-warnings: true
+
+  php-cs:
+    needs:
+      - php-syntax
+    name: Check PHP coding style
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'
+          tools: php-cs-fixer:3
+          coverage: none
+      -
+        name: Check PHP coding style
+        run: php-cs-fixer check --using-cache=no --diff --show-progress=none --verbose --no-interaction --ansi
+
+  phpunit:
+    needs:
+      - php-cs
+    strategy:
+      matrix:
+        operating-system:
+          - ubuntu-latest
+        php-version:
+          - "5.3"
+          - "5.4"
+          - "5.5"
+          - "5.6"
+          - "7.0"
+          - "7.1"
+          - "7.2"
+          - "7.3"
+          - "7.4"
+          - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
+          - "8.4"
+        composer-version:
+          - 1
+          - 2
+        include:
+          -
+            operating-system: ubuntu-latest
+            php-version: "5.3"
+            composer-version: 1.7.2
+          -
+            operating-system: windows-latest
+            php-version: "5.5"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "5.5"
+            composer-version: 2
+          -
+            operating-system: windows-latest
+            php-version: "5.6"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "5.6"
+            composer-version: 2
+          -
+            operating-system: windows-latest
+            php-version: "7.0"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "7.0"
+            composer-version: 2
+          -
+            operating-system: windows-latest
+            php-version: "7.4"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "7.4"
+            composer-version: 2
+          -
+            operating-system: windows-latest
+            php-version: "8.0"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "8.0"
+            composer-version: 2
+          -
+            operating-system: windows-latest
+            php-version: "8.4"
+            composer-version: 1
+          -
+            operating-system: windows-latest
+            php-version: "8.4"
+            composer-version: 2
+    name: PHPUnit (php${{ matrix.php-version }}, composer${{ matrix.composer-version }}, ${{ matrix.operating-system }})
+    runs-on: ${{ matrix.operating-system }}
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: none
+          tools: composer:v${{ matrix.composer-version }}
+      -
+        name: Install dependencies
+        run: composer --no-interaction --ansi install --no-progress --optimize-autoloader
+      -
+        name: Test
+        run: composer --no-interaction --ansi run-script test -- --colors=always
