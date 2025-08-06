@@ -2,9 +2,9 @@
 
 namespace ComposerPatcher\Test\Tests;
 
-use Composer\Composer;
 use Composer\Factory;
 use Composer\Installer;
+use Composer\Plugin\PluginInterface;
 use ComposerPatcher\Test\Helpers\MemoryIO;
 use ComposerPatcher\Test\Helpers\TestCase;
 use ComposerPatcher\Util\VolatileDirectory;
@@ -145,7 +145,7 @@ class PatchingTest extends TestCase
                 ),
             );
         }
-        if (\defined('Composer\Composer::RUNTIME_API_VERSION') && version_compare(Composer::RUNTIME_API_VERSION, '2') >= 0) {
+        if (version_compare(PluginInterface::PLUGIN_API_VERSION, '2') >= 0) {
             $rootTempDir = COMPOSER_PATCHER_TEST_DIRTMP;
         } else {
             $rootTempDir = sys_get_temp_dir();
